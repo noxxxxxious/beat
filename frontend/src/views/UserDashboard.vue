@@ -1,19 +1,18 @@
 <template>
   <div>
     <dashboard-nav></dashboard-nav>
+    <org-section :orgs="tempOrgs" />
   </div>
 </template>
 
 <script setup lang='ts'>
-  import { onMounted } from 'vue';
-import DashboardNav from '../components/nav/DashboardNav.vue'
-  
+  import DashboardNav from '../components/nav/DashboardNav.vue'
+  import OrgSection from '@/components/sections/orgs/OrgSection.vue';
+
   //tempdata
   import tempOrgs from '@/components/nav/tempOrgs'
 
-  onMounted(() => {
-    console.log(tempOrgs)
-  })
+
   
 </script>
 

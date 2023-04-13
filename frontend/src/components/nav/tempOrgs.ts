@@ -4,9 +4,9 @@ interface User {
     alias: string;
 }
 
-interface Org {
-    orgName: string;
-    orgId: string;
+export interface Org {
+    name: string;
+    id: string;
     users: User[];
 }
 
