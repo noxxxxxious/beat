@@ -5,7 +5,16 @@
 </template>
 
 <script setup lang='ts'>
-  import DashboardNav from '../components/nav/DashboardNav.vue'
+  import { onMounted } from 'vue';
+import DashboardNav from '../components/nav/DashboardNav.vue'
+  
+  //tempdata
+  import tempOrgs from '@/components/nav/tempOrgs'
+
+  onMounted(() => {
+    console.log(tempOrgs)
+  })
+  
 </script>
 
 <style scoped>
