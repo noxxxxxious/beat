@@ -1,10 +1,10 @@
 <template>
   <span>Please review before proceeding.</span>
-  <v-sheet elevation="10" class="bg-blue-grey-darken-4 h-50 w-75 d-flex flex-column" rounded>
-    <v-container class="pa-0 d-flex">
-      <h2 class="text-h5 text-center py-3 flex-grow-0">Accounts</h2>
+  <v-sheet elevation="10" class="bg-blue-grey-darken-4 h-50 w-75 d-flex flex-column max-width-1024 border-box" rounded>
+    <v-container class="pa-0 headings-grid">
+      <h2 class="text-h5 text-center py-3">Accounts</h2>
       <v-divider vertical></v-divider>
-      <h2 class="text-h5 text-center py-3 flex-grow-0">Operations</h2>
+      <h2 class="text-h5 text-center py-3">Operations</h2>
     </v-container>
     <v-divider></v-divider>
     <v-container class="d-flex flex-grow-1 overflow-hidden pa-0">
@@ -63,4 +63,16 @@
 </script>
 
 <style scoped>
+.max-width-1024 {
+  max-width: 1024px;
+}
+
+.border-box {
+  box-sizing: border-box;
+}
+
+.headings-grid {
+  display: grid;
+  grid-template-columns: 1fr 1px 1fr;
+}
 </style>

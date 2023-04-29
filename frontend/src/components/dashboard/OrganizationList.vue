@@ -1,6 +1,6 @@
 <template>
   <span>Choose organization to work on.</span>
-  <v-sheet elevation="10" class="d-flex flex-column bg-blue-grey-darken-4 h-50 w-75" rounded>
+  <v-sheet elevation="10" class="d-flex flex-column bg-blue-grey-darken-4 h-50 w-75 max-width-1024" rounded>
     <v-text-field
       v-model="filterInput"
       label="Filter by organization name"
@@ -55,5 +55,9 @@
 <style scoped>
   .org-names:nth-child(odd){
     background-color: #37474F;
+  }
+
+  .max-width-1024 {
+    max-width: 1024px;
   }
 </style>
