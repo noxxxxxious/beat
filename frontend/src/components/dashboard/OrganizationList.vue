@@ -32,7 +32,7 @@
 </template>
 
 <script setup lang='ts'>
-  import { ref, computed } from 'vue'
+  import { ref, computed, onMounted } from 'vue'
   import tempOrgs from '@/assets/tempOrgs'
 
   import { useAppStore } from '@/store/app'
@@ -50,6 +50,13 @@
     //TODO: Lock in organization
     store.nextDashboardView()
   }
+
+  onMounted(() => {
+    fetch('/api/organizations').then(data => data.json()).then(result => {
+      console.log(result)
+    })
+  })
+
 </script>
 
 <style scoped>

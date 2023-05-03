@@ -1,0 +1,9 @@
+[
+  {
+    "name": "Example Organization",
+    "organizationId": "organization.onmicrosoft.com",
+    "clientId": "Application ID Here",
+    "certificationThumbprint": "Cert Thumbprint Here",
+    "passwordScheme": ""
+  }
+]

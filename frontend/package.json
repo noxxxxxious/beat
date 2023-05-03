@@ -1,6 +1,7 @@
 {
   "name": "frontend",
   "version": "0.0.0",
+  "proxy": "localhost:3001",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
