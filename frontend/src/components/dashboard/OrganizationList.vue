@@ -8,12 +8,12 @@
     />
     <v-container class="pa-0 overflow-auto h-100">
       <v-list class="bg-blue-grey-darken-4">
-        <v-list-item
-          class="org-names"
-          v-for="org in filteredOrgs"
-          :key="org.id"
+        <beat-list-item
+          v-for="(org, index) in filteredOrgs"
+          :key="org.domain"
+          :index="index"
           :name="org.name"
-          :value="org.name">{{ org.name }}</v-list-item>
+          :id="org.domain" />
       </v-list>
     </v-container>
     <v-container class="pa-0">
@@ -32,17 +32,22 @@
 </template>
 
 <script setup lang='ts'>
-  import { ref, computed, onMounted } from 'vue'
-  import tempOrgs from '@/assets/tempOrgs'
-
+  import { Ref, ref, computed, onMounted } from 'vue'
+  import BeatListItem from '@/components/universal/BeatListItem.vue'
+  
   import { useAppStore } from '@/store/app'
   const store = useAppStore()
-
+  
+  interface Org {
+    name: string,
+    domain: string
+  }
+  let unfilteredOrgs: Ref<Org[]> = ref([])
   const filterInput = ref('')
 
-  const filteredOrgs = computed(() => {
-    if(filterInput.value === '') return tempOrgs
-    const orgs = tempOrgs.filter(org => org.name.toLowerCase().includes(filterInput.value.toLowerCase()))
+  const filteredOrgs = computed((): Org[] => {
+    if(filterInput.value === '') return unfilteredOrgs.value
+    const orgs: Org[] = unfilteredOrgs.value.filter(org => org.name.toLowerCase().includes(filterInput.value.toLowerCase()))
     return orgs
   })
 
@@ -52,18 +57,14 @@
   }
 
   onMounted(() => {
-    fetch('/api/organizations').then(data => data.json()).then(result => {
-      console.log(result)
+    fetch(`${import.meta.env.VITE_SERVER_ADDRESS}/api/organizations`).then(data => data.json()).then(result => {
+      unfilteredOrgs.value = result
     })
   })
 
 </script>
 
 <style scoped>
-  .org-names:nth-child(odd){
-    background-color: #37474F;
-  }
-
   .max-width-1024 {
     max-width: 1024px;
   }
