@@ -1,6 +1,7 @@
 import express from 'express'
 
 import * as orgs from './helpers/organizations'
+import pwsh from './powershell/index'
 
 const app = express()
 const port = 3001
@@ -18,8 +19,22 @@ app.get('/', (_req, res) => {
 })
 
 app.get('/api/organizations', (_req, res) => {
-  const orgDetails = orgs.getOrganizationDetails()
-  res.json(orgDetails)
+  const orgList = orgs.getOrganizationList()
+  res.json(orgList)
+})
+
+app.get('/api/accounts/:orgId', (req, res) => {
+  const orgId = req.params['orgId']
+  console.log(`Received request to get accounts for orgId: ${orgId}`)
+  const org = orgs.getOrganization(orgId)
+  if(!org){
+    res.json({error: 'Unable to find organization.'})
+    return
+  }
+  pwsh.getMailboxUsers(org).then(accountList => {
+    console.log(`Returning following account list: ${accountList}`)
+    res.json(accountList)
+  })
 })
 
 app.listen(port, () => {

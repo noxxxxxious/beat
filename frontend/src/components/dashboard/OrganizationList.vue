@@ -13,7 +13,8 @@
           :key="org.domain"
           :index="index"
           :name="org.name"
-          :id="org.domain" />
+          :id="org.domain"
+          @click="setSelectedOrg(org.domain)" />
       </v-list>
     </v-container>
     <v-container class="pa-0">
@@ -26,22 +27,27 @@
         rounded="0"
         class="w-50 bg-blue-grey rounded-be"
         @click="confirmChoice()"
+        :disabled="selectedOrg === ''"
       >Confirm</v-btn>
     </v-container>
   </v-sheet>
 </template>
 
 <script setup lang='ts'>
+  //Imports
   import { Ref, ref, computed, onMounted } from 'vue'
   import BeatListItem from '@/components/universal/BeatListItem.vue'
   
+  //Store
   import { useAppStore } from '@/store/app'
   const store = useAppStore()
   
+  //Org list
   interface Org {
     name: string,
     domain: string
   }
+
   let unfilteredOrgs: Ref<Org[]> = ref([])
   const filterInput = ref('')
 
@@ -51,17 +57,30 @@
     return orgs
   })
 
+  //Save selected org before sending to store on confirm button press
+  const selectedOrg = ref('')
+  function setSelectedOrg(orgId: string) {
+    console.log(orgId)
+    if(selectedOrg.value === orgId)
+      selectedOrg.value = ''
+    else
+      selectedOrg.value = orgId
+
+    console.log(selectedOrg.value)
+  }
+
+  //Button logic
   function confirmChoice(){
-    //TODO: Lock in organization
+    store.setSelectedOrganization(selectedOrg.value)
     store.nextDashboardView()
   }
 
+  //Get orgs on mount
   onMounted(() => {
     fetch(`${import.meta.env.VITE_SERVER_ADDRESS}/api/organizations`).then(data => data.json()).then(result => {
       unfilteredOrgs.value = result
     })
   })
-
 </script>
 
 <style scoped>

@@ -8,17 +8,14 @@
     />
     <v-container class="pa-0 overflow-auto h-100">
       <v-list class="bg-blue-grey-darken-4">
-        <v-list-item
-          class="op-names"
-          v-for="op in filteredOps"
+        <beat-list-item
+          v-for="(op, index) in filteredOps"
           :key="op.name"
+          :index="index"
           :name="op.name"
-          :value="op.name">
-          <div class="d-flex justify-space-between">
-            <span>{{ op.name }}</span>
-            <span class="text-grey">{{ op.description }}</span>
-          </div>
-        </v-list-item>
+          :id="op.name"
+          :description="op.description"
+          @click="setSelectedOp(op.name)" />
       </v-list>
     </v-container>
     <v-container class="pa-0">
@@ -30,6 +27,7 @@
       <v-btn 
         rounded="0"
         class="w-50 bg-blue-grey rounded-be"
+        :disabled="selectedOp === ''"
         @click="confirmChoice()"
       >Confirm</v-btn>
     </v-container>
@@ -37,10 +35,15 @@
 </template>
 
 <script setup lang='ts'>
+  //Imports
   import { ref, computed } from 'vue'
+  import BeatListItem from '@/components/universal/BeatListItem.vue'
+
+  //Store
   import { useAppStore } from '@/store/app'
   const store = useAppStore()
 
+  //Op list
   const filterInput = ref('')
   const operations = [{
     name: 'Retire Users',
@@ -59,22 +62,31 @@
     return ops
   })
 
+  //Save selected op before sending to store on confirm button press
+  const selectedOp = ref('')
+  function setSelectedOp(opId: string) {
+    console.log(opId)
+    if(selectedOp.value === opId)
+      selectedOp.value = ''
+    else
+      selectedOp.value = opId
+
+    console.log(selectedOp.value)
+  }
+
+  //Button logic
   function cancelChoice(){
     //TODO: Undo org selection
     store.previousDashboardView()
   }
 
   function confirmChoice(){
-    //TODO: Confirm op selection
+    store.setSelectedOperation(selectedOp.value)
     store.nextDashboardView()
   }
 </script>
 
 <style scoped>
-  .op-names:nth-child(odd){
-    background-color: #37474F;
-  }
-
   .max-width-1024 {
     max-width: 1024px;
   }

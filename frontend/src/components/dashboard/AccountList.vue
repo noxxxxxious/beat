@@ -40,7 +40,7 @@
 </template>
 
 <script setup lang='ts'>
-  import { ref, computed } from 'vue'
+  import { ref, computed, onMounted } from 'vue'
   import { useAppStore } from '@/store/app'
   const store = useAppStore()
 
@@ -77,6 +77,13 @@
     //TODO: Confirm accounts selection
     store.nextDashboardView()
   }
+
+  //Get accounts on mount
+  onMounted(() => {
+    fetch(`${import.meta.env.VITE_SERVER_ADDRESS}/api/accounts/${store.getSelectedOrganization}`).then(data => data.json()).then(result => {
+      console.log(result)
+    })
+  })
   
 </script>
 

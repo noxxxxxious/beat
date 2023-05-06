@@ -1,6 +1,7 @@
 import orgConfig from '../orgConfig.json' assert { type: 'json' }
+import { OrgDetails } from '../interfaces'
 
-export function getOrganizationDetails(){
+export function getOrganizationList(){
   return orgConfig.map(org => {
     return {
       name: org.name,
@@ -9,6 +10,10 @@ export function getOrganizationDetails(){
   })
 }
 
+export function getOrganization(orgId: string): OrgDetails | undefined {
+  return orgConfig.find(org => org.domain === orgId)
+}
+
 export default {
-  getOrganizationDetails
+  getOrganizationList
 }
