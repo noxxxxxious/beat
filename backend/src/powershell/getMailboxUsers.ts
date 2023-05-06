@@ -32,19 +32,19 @@ function getMailboxUsers(org: OrgDetails): Promise<UserData[]>{
           })
         })
   
-        //Remove first two elements of array since they are useless
-        const dataSeparatedByLine = data.splice(2)
-  
         const userData: UserData[] = []
-  
-        dataSeparatedByLine.forEach(userLine => {
-          const tempArray = userLine.split(/\s{2,}/)
+        
+        for(let i=0; i<data.length; i = i + 3){
+          const alias               = data[i].substring(data[i].indexOf(":") + 6)  //Add 6 to index to get rid of garbage whitespace characters
+          const primarySMTPAddress  = data[i+1].substring(data[i+1].indexOf(":") + 6)
+          const displayName         = data[i+2].substring(data[i+2].indexOf(":") + 6)
+
           userData.push({
-            alias: tempArray[0],
-            primarySMTPAddress: tempArray[1],
-            displayName: tempArray[2]
+            alias,
+            primarySMTPAddress,
+            displayName
           })
-        })
+        }
   
         resolve(userData)
       }
