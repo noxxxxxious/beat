@@ -28,7 +28,6 @@ app.get('/api/organizations', (_req, res) => {
 app.get('/api/operations', (_req, res) => {
   console.log('Getting operations list')
   const opList = ops.getOperationsList()
-  console.log('Received operation list:', opList)
   res.json(opList)
 })
 

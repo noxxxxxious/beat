@@ -85,7 +85,6 @@
   //Get ops on mount
   onMounted(() => {
     fetch(`${import.meta.env.VITE_SERVER_ADDRESS}/api/operations`).then(data => data.json()).then(result => {
-      console.log(result)
       Object.assign(operationList, result)
     })
   })

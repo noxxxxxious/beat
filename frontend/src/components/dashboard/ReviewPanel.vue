@@ -19,10 +19,15 @@
       </v-container>
       <v-divider vertical></v-divider>
       <v-container class="pa-0 d-flex flex-column overflow-auto">
-        <v-list-item
+        <beat-list-item
           v-for="(operation, index) in operations"
-          :key="index + operation"
-        >{{ operation }}</v-list-item>
+          :key="operation"
+          :name="operation"
+          :index="index"
+          :id="operation"
+          description=" "
+          :flipcolor="true"
+        >{{ operation }}</beat-list-item>
       </v-container>
     </v-container>
     <v-container class="pa-0">
@@ -34,24 +39,38 @@
       <v-btn 
         rounded="0"
         class="w-50 bg-blue-grey rounded-be"
+        :disabled="confirmDisabled"
         @click="confirmChoice()"
-      >Confirm</v-btn>
+      >{{ confirmDisabled ? countdownCounter : 'Confirm' }}</v-btn>
     </v-container>
   </v-sheet>
 </template>
 
 <script setup lang='ts'>
   //Imports
+  import { ref, reactive, onMounted } from 'vue'
   import BeatListItem from '../universal/BeatListItem.vue'
 
   //Store
   import { useAppStore } from '@/store/app'
   const store = useAppStore()
 
+  const confirmDisabled = ref(true)
+  const countdownCounter = ref(3)
+  let timer: NodeJS.Timer | null = null
+
   const accounts = store.getSelectedAccounts
   //Temp vars to fill up space
-  const operations = ['o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o']
+  const operations: string[] = reactive([])
+  accounts.forEach(account => {
+    store.getSelectedOperation.operationList.forEach(op => {
+      let description = op.replaceAll('[alias]', account.alias)
+      description = description.replaceAll('[displayName]', account.displayName)
+      operations.push(description)
+    })
+  })
 
+  //Button logic
   function cancelChoice(){
     //TODO: Undo accounts selection
     store.previousDashboardView()
@@ -61,6 +80,22 @@
     //TODO: Confirm all selection & perform actions
     store.nextDashboardView()
   }
+
+  //Countdown logic
+  function countdown(){
+    if(countdownCounter.value > 1)
+      countdownCounter.value--
+    else {
+      confirmDisabled.value = false
+      if(timer)
+        clearInterval(timer)
+    }
+  }
+
+  //Enable confirm 3 seconds after mount
+  onMounted(() => {
+    timer = setInterval(countdown, 1000)
+  })
 </script>
 
 <style scoped>

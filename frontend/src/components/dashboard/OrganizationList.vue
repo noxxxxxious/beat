@@ -63,8 +63,6 @@
       selectedOrg.value = ''
     else
       selectedOrg.value = orgId
-
-    console.log(selectedOrg.value)
   }
 
   //Button logic

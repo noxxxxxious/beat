@@ -5,7 +5,7 @@ function getMailboxUsers(org: OrgDetails): Promise<UserData[]>{
   return new Promise(resolve => {
     const stdout: string[] = []
     const posh = spawn('C:\\Progra~1\\PowerShell\\7\\pwsh.exe', 
-      [`.\\poshcommands\\getmailboxes.ps1`, org.clientId, org.certificationThumbprint, org.domain],
+      [`.\\poshscripts\\getmailboxes.ps1`, org.clientId, org.certificationThumbprint, org.domain],
       {shell: true})
   
     posh.stdout.on('data', data => {
