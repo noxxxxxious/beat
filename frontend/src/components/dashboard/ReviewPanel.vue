@@ -8,22 +8,21 @@
     </v-container>
     <v-divider></v-divider>
     <v-container class="d-flex flex-grow-1 overflow-hidden pa-0">
-      <v-container class="pa-0 d-flex flex-column">
-        <v-list class="bg-blue-grey-darken-4 pa-0 overflow-auto">
-          <v-list-item
-            v-for="(account, index) in accounts"
-            :key="index + account"
-          >{{ account }}</v-list-item>
-        </v-list>
+      <v-container class="pa-0 d-flex flex-column overflow-auto">
+        <beat-list-item
+          v-for="(account, index) in accounts"
+          :key="account.alias"
+          :index="index"
+          :id="account.alias"
+          :name="account.displayName"
+        >{{ account.displayName }}</beat-list-item>
       </v-container>
       <v-divider vertical></v-divider>
-      <v-container class="pa-0 d-flex flex-column">
-        <v-list class="bg-blue-grey-darken-4 pa-0 overflow-auto">
-          <v-list-item
-            v-for="(operation, index) in operations"
-            :key="index + operation"
-          >{{ operation }}</v-list-item>
-        </v-list>
+      <v-container class="pa-0 d-flex flex-column overflow-auto">
+        <v-list-item
+          v-for="(operation, index) in operations"
+          :key="index + operation"
+        >{{ operation }}</v-list-item>
       </v-container>
     </v-container>
     <v-container class="pa-0">
@@ -42,14 +41,16 @@
 </template>
 
 <script setup lang='ts'>
-  import { useAppStore } from '@/store/app';
+  //Imports
+  import BeatListItem from '../universal/BeatListItem.vue'
+
+  //Store
+  import { useAppStore } from '@/store/app'
   const store = useAppStore()
 
+  const accounts = store.getSelectedAccounts
   //Temp vars to fill up space
-  const accounts = ['a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a']
   const operations = ['o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o']
-  // const accounts = ['a', 'a', 'a', 'a', 'a']
-  // const operations = ['o', 'o', 'o', 'o', 'o']
 
   function cancelChoice(){
     //TODO: Undo accounts selection

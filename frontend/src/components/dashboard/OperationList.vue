@@ -7,12 +7,16 @@
       hide-details
     />
     <v-container class="pa-0 overflow-auto h-100">
+      <beat-skeleton-loader 
+        v-if="operations.length <= 0"
+        description="Fetching operations list"></beat-skeleton-loader>
       <beat-list-item
         v-for="(op, index) in filteredOps"
         :key="op.name"
         :index="index"
         :name="op.name"
         :id="op.name"
+        :active="selectedOp === op.name"
         :description="op.description"
         @click="setSelectedOp(op.name)" />
     </v-container>
@@ -35,6 +39,7 @@
 <script setup lang='ts'>
   //Imports
   import { ref, computed } from 'vue'
+  import BeatSkeletonLoader from '@/components/universal/BeatSkeletonLoader.vue'
   import BeatListItem from '@/components/universal/BeatListItem.vue'
 
   //Store

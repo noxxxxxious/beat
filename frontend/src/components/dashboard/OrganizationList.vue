@@ -7,12 +7,16 @@
       hide-details
     />
     <v-container class="pa-0 overflow-auto h-100">
+      <beat-skeleton-loader 
+        v-if="organizationList.length <= 0"
+        description="Fetching organizations list"></beat-skeleton-loader>
       <beat-list-item
         v-for="(org, index) in filteredOrgs"
         :key="org.domain"
         :index="index"
         :name="org.name"
         :id="org.domain"
+        :active="selectedOrg === org.domain"
         @click="setSelectedOrg(org.domain)" />
     </v-container>
     <v-container class="pa-0">
@@ -33,25 +37,21 @@
 
 <script setup lang='ts'>
   //Imports
-  import { Ref, ref, computed, onMounted } from 'vue'
+  import { Ref, ref, reactive, computed, onMounted } from 'vue'
+  import { Org } from '@/assets/interfaces'
+  import BeatSkeletonLoader from '@/components/universal/BeatSkeletonLoader.vue'
   import BeatListItem from '@/components/universal/BeatListItem.vue'
   
   //Store
   import { useAppStore } from '@/store/app'
   const store = useAppStore()
-  
-  //Org list
-  interface Org {
-    name: string,
-    domain: string
-  }
 
-  let unfilteredOrgs: Ref<Org[]> = ref([])
+  let organizationList: Org[] = reactive([])
   const filterInput = ref('')
 
   const filteredOrgs = computed((): Org[] => {
-    if(filterInput.value === '') return unfilteredOrgs.value
-    const orgs: Org[] = unfilteredOrgs.value.filter(org => org.name.toLowerCase().includes(filterInput.value.toLowerCase()))
+    if(filterInput.value === '') return organizationList
+    const orgs: Org[] = organizationList.filter(org => org.name.toLowerCase().includes(filterInput.value.toLowerCase()))
     return orgs
   })
 
@@ -69,14 +69,19 @@
 
   //Button logic
   function confirmChoice(){
-    store.setSelectedOrganization(selectedOrg.value)
+    if(!selectedOrg) return
+
+    const org = organizationList.find(search => search.domain === selectedOrg.value)    
+    if(!org) throw new Error(`Unable to find ${selectedOrg} in Organization list`)
+
+    store.setSelectedOrganization(org)
     store.nextDashboardView()
   }
 
   //Get orgs on mount
   onMounted(() => {
     fetch(`${import.meta.env.VITE_SERVER_ADDRESS}/api/organizations`).then(data => data.json()).then(result => {
-      unfilteredOrgs.value = result
+      Object.assign(organizationList, result)
     })
   })
 </script>

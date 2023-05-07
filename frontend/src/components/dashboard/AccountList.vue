@@ -7,7 +7,9 @@
       hide-details
     />
     <v-container class="pa-0 overflow-auto h-100">
-      <v-skeleton-loader v-if="accountList.length <= 0" class="bg-blue-grey-darken-4"></v-skeleton-loader>
+      <beat-skeleton-loader
+        v-if="accountList.length <= 0"
+        :description="`Fetching ${store.getSelectedOrganization.name} user mailboxes`"></beat-skeleton-loader>
         <beat-list-item
           v-for="(account, index) in filteredAccountList"
           :key="account.alias"
@@ -38,19 +40,13 @@
 <script setup lang='ts'>
   //Imports
   import { Ref, ref, reactive, computed, onMounted } from 'vue'
-  import { VSkeletonLoader } from 'vuetify/labs/VSkeletonLoader'
-  import BeatListItem from '../universal/BeatListItem.vue'
+  import { UserAccount } from '@/assets/interfaces'
+  import BeatSkeletonLoader from '@/components/universal/BeatSkeletonLoader.vue'
+  import BeatListItem from '@/components/universal/BeatListItem.vue'
 
   //Store
   import { useAppStore } from '@/store/app'
   const store = useAppStore()
-
-  //User account list
-  interface UserAccount {
-    displayName: string,
-    alias: string,
-    primarySMTPAddress: string
-  }
 
   const accountList: UserAccount[] = reactive([])
   const selectedAccounts: string[] = reactive([])  
@@ -86,13 +82,19 @@
   }
 
   function confirmChoice(){
-    //TODO: Confirm accounts selection
+    const accounts: UserAccount[] = []
+    selectedAccounts.forEach(alias => {
+      const account = accountList.find(search => search.alias === alias)
+      if(!account) throw new Error(`Unable to find selected alias ${alias} in account list`)
+      accounts.push(account)
+    })
+    store.setSelectedAccounts(accounts)
     store.nextDashboardView()
   }
 
   //Get accounts on mount
   onMounted(() => {
-    fetch(`${import.meta.env.VITE_SERVER_ADDRESS}/api/accounts/${store.getSelectedOrganization}`).then(data => data.json()).then(result => {
+    fetch(`${import.meta.env.VITE_SERVER_ADDRESS}/api/accounts/${store.getSelectedOrganization.domain}`).then(data => data.json()).then(result => {
       //TODO: Handle error
 
       Object.assign(accountList, result as UserAccount[])
@@ -108,5 +110,9 @@
 
   .max-width-1024 {
     max-width: 1024px;
+  }
+
+  .beat-h-100 .v-skeleton-loader__bone {
+    height: 100% !important;
   }
 </style>
