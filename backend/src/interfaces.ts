@@ -11,3 +11,10 @@ export interface UserData {
   displayName: string,
   primarySMTPAddress: string
 }
+
+export interface OperationDetails {
+  name: string,
+  description: string,
+  enabled?: boolean,
+  operationList: string[]
+}

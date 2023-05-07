@@ -8,7 +8,7 @@
     />
     <v-container class="pa-0 overflow-auto h-100">
       <beat-skeleton-loader 
-        v-if="operations.length <= 0"
+        v-if="operationList.length <= 0"
         description="Fetching operations list"></beat-skeleton-loader>
       <beat-list-item
         v-for="(op, index) in filteredOps"
@@ -38,7 +38,8 @@
 
 <script setup lang='ts'>
   //Imports
-  import { ref, computed } from 'vue'
+  import { ref, computed, reactive, onMounted } from 'vue'
+  import { Operation } from '@/assets/interfaces'
   import BeatSkeletonLoader from '@/components/universal/BeatSkeletonLoader.vue'
   import BeatListItem from '@/components/universal/BeatListItem.vue'
 
@@ -48,20 +49,11 @@
 
   //Op list
   const filterInput = ref('')
-  const operations = [{
-    name: 'Retire Users',
-    description: 'Move mail to hidden shared-mailbox & delete'
-  },{
-    name: 'Delete Users',
-    description: 'Delete without saving email'
-  },{
-    name: 'Create Users',
-    description: 'Create account according to org defaults'
-  }]
+  const operationList: Operation[] = reactive([])
 
   const filteredOps = computed(() => {
-    if(filterInput.value === '') return operations
-    const ops = operations.filter(op => op.name.toLowerCase().includes(filterInput.value.toLowerCase()))
+    if(filterInput.value === '') return operationList
+    const ops = operationList.filter(op => op.name.toLowerCase().includes(filterInput.value.toLowerCase()))
     return ops
   })
 
@@ -84,9 +76,19 @@
   }
 
   function confirmChoice(){
-    store.setSelectedOperation(selectedOp.value)
+    const op = operationList.find(search => search.name === selectedOp.value)
+    if(!op) throw new Error(`Unable to find operation ${op} in operation list`)
+    store.setSelectedOperation(op)
     store.nextDashboardView()
   }
+
+  //Get ops on mount
+  onMounted(() => {
+    fetch(`${import.meta.env.VITE_SERVER_ADDRESS}/api/operations`).then(data => data.json()).then(result => {
+      console.log(result)
+      Object.assign(operationList, result)
+    })
+  })
 </script>
 
 <style scoped>

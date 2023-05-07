@@ -15,7 +15,7 @@
 <script setup lang='ts'>
   import { computed } from 'vue';
 
-  const { id, name, index, description } = defineProps({
+  const { id, name, index, description, flipcolor } = defineProps({
     id: {
       type: String,
       required: true
@@ -35,11 +35,15 @@
     active: {
       type: Boolean,
       default: false
+    },
+    flipcolor: {
+      type: Boolean,
+      default: false
     }
   })
 
   const classes = computed(() => {
-    return index % 2 === 0 ? 'bg-blue-grey-darken-3' : 'bg-blue-grey-darken-4'
+    return (index + (flipcolor ? 1 : 0)) % 2 === 0 ? 'bg-blue-grey-darken-3' : 'bg-blue-grey-darken-4'
   })
 
   const subTitle = computed(() => {

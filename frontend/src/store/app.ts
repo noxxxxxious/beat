@@ -1,13 +1,13 @@
 // Utilities
 import { defineStore } from 'pinia'
 import { DashboardView } from '@/assets/enums'
-import { Org, UserAccount } from '@/assets/interfaces'
+import { Org, UserAccount, Operation } from '@/assets/interfaces'
 
 export const useAppStore = defineStore('app', {
   state: () => ({
     currentDashboardView: DashboardView.Organizations,
     selectedOrganization: <Org>{}, //onmicrosoft domain
-    selectedOperation: '',
+    selectedOperation: <Operation>{},
     selectedAccounts: <UserAccount[]>[]
   }),
   getters: {
@@ -30,7 +30,7 @@ export const useAppStore = defineStore('app', {
         this.currentDashboardView = DashboardView.Organizations
     },
     setSelectedOrganization(inOrgId: Org)           { this.selectedOrganization = inOrgId },
-    setSelectedOperation(inOp: string)              { this.selectedOperation = inOp },
-    setSelectedAccounts(inAccounts: UserAccount[])  { this.selectedAccounts = inAccounts }
+    setSelectedOperation(inOp: Operation)           { this.selectedOperation    = inOp },
+    setSelectedAccounts(inAccounts: UserAccount[])  { this.selectedAccounts     = inAccounts }
   }
 })

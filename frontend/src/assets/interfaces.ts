@@ -8,3 +8,9 @@ export interface UserAccount {
   alias: string,
   primarySMTPAddress: string
 }
+
+export interface Operation {
+  name: string,
+  description: string,
+  operationList: string[]
+}
