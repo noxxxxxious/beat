@@ -1,6 +1,7 @@
 import express from 'express'
 
 import * as orgs from './helpers/organizations'
+import * as ops  from './helpers/operations'
 import pwsh from './powershell/index'
 
 const app = express()
@@ -21,6 +22,11 @@ app.get('/', (_req, res) => {
 app.get('/api/organizations', (_req, res) => {
   const orgList = orgs.getOrganizationList()
   res.json(orgList)
+})
+
+app.get('/api/operations', (_req, res) => {
+  const opList = ops.getOperationsList()
+  res.json(opList)
 })
 
 app.get('/api/accounts/:orgId', (req, res) => {

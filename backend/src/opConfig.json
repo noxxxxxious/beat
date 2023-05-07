@@ -1,0 +1,31 @@
+[
+  {
+    "name": "Retire Users",
+    "description": "Move mail to hidden shared-mailbox & delete",
+    "enabled": true,
+    "operationList": [
+      "Hide [alias] from Global Address List",
+      "Create new shared mailbox with display name [displayName] and alias [alias].retired",
+      "Soft-delete [alias] mailbox",
+      "Wait 1 minute for shared mailbox GUID to generate",
+      "Hide [alias].retired from Global Address List",
+      "Create mail restore request to transfer mail from [alias] to [alias].retired"
+    ]
+  },
+  {
+    "name": "Delete Users",
+    "description": "Delete without saving email",
+    "enabled": true,
+    "operationList": [
+      "Soft-delete [alias] mailbox"
+    ]
+  },
+  {
+    "name": "Create Users",
+    "description": "Create account according to org defaults",
+    "enabled": false,
+    "operationList": [
+      ""
+    ]
+  }
+]
