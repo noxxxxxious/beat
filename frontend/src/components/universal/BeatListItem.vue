@@ -3,6 +3,7 @@
   :class="classes" 
   :value="id" 
   :index="index"
+  :active="active"
   active-class="active">
     <div class="d-flex justify-space-between">
       <span>{{ name }}</span>
@@ -30,6 +31,10 @@
     description: {
       type: String,
       default: ''
+    },
+    active: {
+      type: Boolean,
+      default: false
     }
   })
 

@@ -7,22 +7,17 @@
       hide-details
     />
     <v-container class="pa-0 overflow-auto h-100">
-      <v-list class="bg-blue-grey-darken-4">
-        <v-list-item
-          class="account-names"
-          v-for="account in filteredAccounts"
+      <v-skeleton-loader v-if="accountList.length <= 0" class="bg-blue-grey-darken-4"></v-skeleton-loader>
+        <beat-list-item
+          v-for="(account, index) in filteredAccountList"
           :key="account.alias"
-          :name="account.alias"
-          :value="account.alias"
+          :name="account.displayName"
+          :id="account.alias"
+          :index="index"
+          :description="`${account.alias} | ${account.primarySMTPAddress}`"
+          :active="checkActive(account.alias)"
           @click="toggleUserCheck(account.alias)"
-          >
-          <template v-slot:prepend="{ isActive }">
-            <v-list-item-action start>
-              <v-checkbox-btn :model-value="isActive"></v-checkbox-btn>
-            </v-list-item-action>
-          </template>
-          {{ account.name }}</v-list-item>
-      </v-list>
+          >{{ account.displayName }}</beat-list-item>
     </v-container>
     <v-container class="pa-0">
       <v-btn 
@@ -34,40 +29,57 @@
         rounded="0"
         class="w-50 bg-blue-grey rounded-be"
         @click="confirmChoice()"
+        :disabled="selectedAccounts.length === 0"
       >Confirm</v-btn>
     </v-container>
   </v-sheet>
 </template>
 
 <script setup lang='ts'>
-  import { ref, computed, onMounted } from 'vue'
+  //Imports
+  import { Ref, ref, reactive, computed, onMounted } from 'vue'
+  import { VSkeletonLoader } from 'vuetify/labs/VSkeletonLoader'
+  import BeatListItem from '../universal/BeatListItem.vue'
+
+  //Store
   import { useAppStore } from '@/store/app'
   const store = useAppStore()
 
-  import tempOrgs from '@/assets/tempOrgs'
-  const tempAccounts = tempOrgs[0].users
+  //User account list
+  interface UserAccount {
+    displayName: string,
+    alias: string,
+    primarySMTPAddress: string
+  }
 
-  //Figure out how to type
-  const accountModels: any = {}
-
-  tempAccounts.forEach(account => {
-    accountModels[account.alias] = { isChecked: false }
-  })
+  const accountList: UserAccount[] = reactive([])
+  const selectedAccounts: string[] = reactive([])  
 
   const filterInput = ref('')
 
-  const filteredAccounts = computed(() => {
-    if(filterInput.value === '') return tempAccounts
-    const accounts = tempAccounts.filter(account => account.name.toLowerCase().includes(filterInput.value.toLowerCase()))
+  const filteredAccountList = computed(() => {
+    if(filterInput.value === '') return accountList
+    const accounts = accountList.filter(account => account.displayName.toLowerCase().includes(filterInput.value.toLowerCase()))
     return accounts
   })
 
-  function toggleUserCheck(accountAlias: string) {
-    if(!accountAlias) throw new Error('Trying to toggle user account checkbox, but no user alias was suplied.')
-    accountModels[accountAlias].isChecked = !accountModels[accountAlias].isChecked
-    console.log(`accountModel[${accountAlias}].isChecked is now: ${accountModels[accountAlias].isChecked}`)
+  function toggleUserCheck(inAlias: string) {
+    //Check if alias is added to list already, if exists, remove it from the list, else, add to list
+    if(!inAlias) throw new Error('Trying to toggle user account checkbox, but no user alias was suplied.')
+    const searchIndex = selectedAccounts.indexOf(inAlias)
+    if(searchIndex > -1){
+      selectedAccounts.splice(searchIndex, 1)
+    } else {
+      selectedAccounts.push(inAlias)
+    }
   }
 
+  function checkActive(inAlias: string){
+    if(!inAlias) throw new Error(`Call to checkActive() done with invalid inAlias argument: inAlias == ${inAlias}`)
+    return (selectedAccounts.indexOf(inAlias) > -1)
+  }
+
+  //Button logic
   function cancelChoice(){
     //TODO: Undo op selection
     store.previousDashboardView()
@@ -81,7 +93,9 @@
   //Get accounts on mount
   onMounted(() => {
     fetch(`${import.meta.env.VITE_SERVER_ADDRESS}/api/accounts/${store.getSelectedOrganization}`).then(data => data.json()).then(result => {
-      console.log(result)
+      //TODO: Handle error
+
+      Object.assign(accountList, result as UserAccount[])
     })
   })
   

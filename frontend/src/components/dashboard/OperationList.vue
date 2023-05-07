@@ -7,16 +7,14 @@
       hide-details
     />
     <v-container class="pa-0 overflow-auto h-100">
-      <v-list class="bg-blue-grey-darken-4">
-        <beat-list-item
-          v-for="(op, index) in filteredOps"
-          :key="op.name"
-          :index="index"
-          :name="op.name"
-          :id="op.name"
-          :description="op.description"
-          @click="setSelectedOp(op.name)" />
-      </v-list>
+      <beat-list-item
+        v-for="(op, index) in filteredOps"
+        :key="op.name"
+        :index="index"
+        :name="op.name"
+        :id="op.name"
+        :description="op.description"
+        @click="setSelectedOp(op.name)" />
     </v-container>
     <v-container class="pa-0">
       <v-btn 

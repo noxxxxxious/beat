@@ -7,15 +7,13 @@
       hide-details
     />
     <v-container class="pa-0 overflow-auto h-100">
-      <v-list class="bg-blue-grey-darken-4">
-        <beat-list-item
-          v-for="(org, index) in filteredOrgs"
-          :key="org.domain"
-          :index="index"
-          :name="org.name"
-          :id="org.domain"
-          @click="setSelectedOrg(org.domain)" />
-      </v-list>
+      <beat-list-item
+        v-for="(org, index) in filteredOrgs"
+        :key="org.domain"
+        :index="index"
+        :name="org.name"
+        :id="org.domain"
+        @click="setSelectedOrg(org.domain)" />
     </v-container>
     <v-container class="pa-0">
       <v-btn 
