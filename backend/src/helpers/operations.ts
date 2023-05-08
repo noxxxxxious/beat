@@ -19,3 +19,16 @@ export function getOperationsList(){
   console.log('Returning operations: ', ops)
   return ops
 }
+
+export function handleOperation(payload: any){
+  const { operation, accounts } = payload
+  if(!operation) return { error: true, output: `Error: Operation is ${operation}`}
+  if(!accounts)  return { error: true, output: `Error: Accounts is ${accounts} for operation ${operation}`}
+
+  switch(operation){
+    case 'Retire Users':
+
+      break;
+    default:
+  }
+}

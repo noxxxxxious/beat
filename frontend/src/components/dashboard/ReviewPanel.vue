@@ -78,6 +78,19 @@
 
   function confirmChoice(){
     //TODO: Confirm all selection & perform actions
+    const fetchOptions: RequestInit = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({operation: store.getSelectedOperation, accounts: store.getSelectedAccounts})
+    }
+
+    fetch(`${import.meta.env.VITE_SERVER_ADDRESS}/api/operate/${store.getSelectedOrganization.domain}`, fetchOptions)
+    .then(data => data.json())
+    .then(result => {
+      console.log(result)
+    })
     store.nextDashboardView()
   }
 

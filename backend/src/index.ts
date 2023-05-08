@@ -7,6 +7,8 @@ import pwsh from './powershell/index'
 const app = express()
 const port = 3001
 
+app.use(express.json())
+
 //ENABLE CORS FOR DEVELOPMENT
 //TODO: REMOVE FOR PRODUCTION
 app.use((_req, res, next) => {
@@ -29,6 +31,13 @@ app.get('/api/operations', (_req, res) => {
   console.log('Getting operations list')
   const opList = ops.getOperationsList()
   res.json(opList)
+})
+
+app.post('/api/operate/:orgId', (req, res) => {
+  const orgId = req.params['orgId']
+  const userList = req.body
+  console.log(req.body)
+  console.log(`Received request to retire users for orgId: ${orgId} | Alias list: ${JSON.stringify(userList)}`)
 })
 
 app.get('/api/accounts/:orgId', (req, res) => {
