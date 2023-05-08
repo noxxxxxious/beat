@@ -11,10 +11,11 @@ export const useAppStore = defineStore('app', {
     selectedAccounts: <UserAccount[]>[]
   }),
   getters: {
-    getCurrentDashboardView:  (state) => state.currentDashboardView,
-    getSelectedOrganization:  (state) => state.selectedOrganization,
-    getSelectedOperation:     (state) => state.selectedOperation,
-    getSelectedAccounts:      (state) => state.selectedAccounts
+    getCurrentDashboardView:    (state) => state.currentDashboardView,
+    getSelectedOrganization:    (state) => state.selectedOrganization,
+    getSelectedOperation:       (state) => state.selectedOperation,
+    getSelectedAccounts:        (state) => state.selectedAccounts,
+    getSelectedAccountAliases:  (state) => state.selectedAccounts.map((account) => account.alias)
   },
   actions: {
     setCurrentDashboardView(inView: DashboardView) { this.currentDashboardView = inView },

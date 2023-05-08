@@ -1,5 +1,7 @@
 import opConfig from '../opConfig.json' assert { type: 'json' }
-import { OperationDetails } from '../interfaces'
+import { getOrganization } from './organizations'
+import { OperationDetails, OrgDetails } from '../interfaces'
+import retireUsers from '../powershell/retireUsers'
 const operations: OperationDetails[] = opConfig
 
 export function getOperationsList(){
@@ -20,15 +22,19 @@ export function getOperationsList(){
   return ops
 }
 
-export function handleOperation(payload: any){
+export function handleOperation(orgId: string, payload: any){
   const { operation, accounts } = payload
+  if(!orgId)     return { error: true, output: `Error: orgId is required for handleOperation()`}
   if(!operation) return { error: true, output: `Error: Operation is ${operation}`}
   if(!accounts)  return { error: true, output: `Error: Accounts is ${accounts} for operation ${operation}`}
+  
+  console.log(`Handing operation "${operation}" for orgId "${orgId}`)
+  const org = getOrganization(orgId)
+  if(!org)       return { error: true, output: `Error: Unable to find organization data for ${orgId}`}
 
   switch(operation){
     case 'Retire Users':
-
-      break;
+      retireUsers(org, accounts).then(result => { return result })
     default:
   }
 }

@@ -37,7 +37,7 @@
 
 <script setup lang='ts'>
   //Imports
-  import { Ref, ref, reactive, computed, onMounted } from 'vue'
+  import { ref, reactive, computed, onMounted } from 'vue'
   import { Org } from '@/assets/interfaces'
   import BeatSkeletonLoader from '@/components/universal/BeatSkeletonLoader.vue'
   import BeatListItem from '@/components/universal/BeatListItem.vue'
@@ -67,10 +67,10 @@
 
   //Button logic
   function confirmChoice(){
-    if(!selectedOrg) return
+    if(!selectedOrg.value) return
 
     const org = organizationList.find(search => search.domain === selectedOrg.value)    
-    if(!org) throw new Error(`Unable to find ${selectedOrg} in Organization list`)
+    if(!org) throw new Error(`Unable to find ${selectedOrg.value} in Organization list`)
 
     store.setSelectedOrganization(org)
     store.nextDashboardView()
