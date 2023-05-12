@@ -6,6 +6,7 @@
     <op-list v-else-if="showOps"></op-list>
     <account-list v-else-if="showAccounts"></account-list>
     <review-panel v-else-if="showReview"></review-panel>
+    <result-panel v-else-if="showResult"></result-panel>
     <span v-else>Unrecognized Dashboard View</span>
   </v-container>
 </template>
@@ -20,6 +21,7 @@
   import OpList from '@/components/dashboard/OperationList.vue'
   import AccountList from '@/components/dashboard/AccountList.vue'
   import ReviewPanel from '@/components/dashboard/ReviewPanel.vue'
+  import ResultPanel from '@/components/dashboard/ResultPanel.vue'
   
   //Initialize store
   import { useAppStore } from '@/store/app'
