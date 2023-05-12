@@ -3,12 +3,7 @@
 Connect-ExchangeOnline -AppId $args[0] -CertificateThumbprint $args[1] -Organization $args[2] -ShowBanner:$false
 Get-Mailbox | Where-Object -Property RecipientTypeDetails -EQ UserMailbox | Select-Object Alias,PrimarySMTPAddress,DisplayName | fl
 
-$aliasList = args[3]
-
-#Make sure alias list is an array. If not, exit
-if($AliasList.getType().BaseType.Name -NE "Array"){
-  throw 'Arugment 4 $AliasList must be an array. I.E. @("abc", "123")'
-}
+$aliasList = ($args[3] -split ",")
 
 $mailboxList = @()
 $backupMailboxes = @()

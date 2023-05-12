@@ -37,8 +37,9 @@ app.post('/api/operate/:orgId', (req, res) => {
   const orgId = req.params['orgId']
   const payload = req.body
   console.log(`Received request to retire users for orgId: ${orgId} | Payload: ${JSON.stringify(payload)}`)
-  const result = ops.handleOperation(orgId, payload)
-  res.json(result)
+  ops.handleOperation(orgId, payload).then(result => {
+    res.json(result)
+  })
 })
 
 app.get('/api/accounts/:orgId', (req, res) => {

@@ -96,8 +96,10 @@
   onMounted(() => {
     fetch(`${import.meta.env.VITE_SERVER_ADDRESS}/api/accounts/${store.getSelectedOrganization.domain}`).then(data => data.json()).then(result => {
       //TODO: Handle error
+      const accounts = result as UserAccount[]
+      accounts.sort((a, b) => a.displayName.localeCompare(b.displayName))
 
-      Object.assign(accountList, result as UserAccount[])
+      Object.assign(accountList, accounts)
     })
   })
   

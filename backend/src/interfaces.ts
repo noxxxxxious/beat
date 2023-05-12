@@ -18,3 +18,8 @@ export interface OperationDetails {
   enabled?: boolean,
   operationList: string[]
 }
+
+export interface OperationResult {
+  error: boolean,
+  output: string | string[]
+}
