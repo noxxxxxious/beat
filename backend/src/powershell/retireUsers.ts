@@ -3,7 +3,7 @@ import { OrgDetails, UserData } from '../interfaces'
 
 function retireUsers(org: OrgDetails, aliasList: string[]): Promise<{error: boolean, output: string[]}>{
   //Get array of aliases, then format into PowerShell string
-  const aliasArgument = `@("${aliasList.join('","')}")`
+  const aliasArgument = aliasList.join(',')
   console.log(aliasArgument)
   return new Promise(resolve => {
     const stdout: string[] = []
@@ -17,7 +17,6 @@ function retireUsers(org: OrgDetails, aliasList: string[]): Promise<{error: bool
   
     posh.stderr.on('data', data => {
       console.log(`stderr: ${data}`)
-      console.log(posh.spawnargs)
     })
   
     posh.on('close', code => {
@@ -29,8 +28,6 @@ function retireUsers(org: OrgDetails, aliasList: string[]): Promise<{error: bool
         resolve({error: true, output: stdout})
       }
     })
-
-    resolve({error: true, output: stdout})
   })
 }
 
